@@ -1,0 +1,68 @@
+.main-title{
+    text-align: center;
+    margin: 20px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.description{
+    font-weight: bold;
+}
+
+.userDescription{
+    margin-top: 10px;
+    margin-left: 2vh;
+    border: 1px dotted black;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.image-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dotted black;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.location{
+    margin-top: 10px;
+    margin-left: 2vh;
+    border: 1px dotted black;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.map-button{
+    margin-top: 10px;
+    margin-left: 2vh;
+    border: 1px dotted black;
+    border-radius: 5px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.delete-button{
+    margin-top: 15px;
+    margin-left: 2vh;
+    border: 1px dotted black;
+    border-radius: 5px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 20%;
+    font-size: medium;
+    font-weight: bold;
+    background-color: red;
+    border: none;
+}
+.delete-button:hover{
+    cursor: pointer;
+    background-color:   black;
+    color: red;   
+}
