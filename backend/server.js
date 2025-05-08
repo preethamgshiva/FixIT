@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://fixit-rho.vercel.app/', // ✅ Replace with your actual Vercel frontend URL
+  origin: 'https://fixit-rho.vercel.app', // ✅ Replace with your actual Vercel frontend URL
   methods: ['GET', 'POST', 'DELETE'],
   credentials: true
 }));
