@@ -9,7 +9,7 @@ const AdminDashboard = () => {
 
   const fetchIssues = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/issues');
+      const res = await axios.get('https://fixit-backend-k1od.onrender.com/api/issues');  // Updated to production backend URL
       setIssues(res.data);
     } catch (err) {
       console.error('Failed to fetch issues:', err);
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this issue?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/issues/${id}`);
+      await axios.delete(`https://fixit-backend-k1od.onrender.com/api/issues/${id}`); // Updated to production backend URL
       setIssues(prev => prev.filter(issue => issue._id !== id));
     } catch (err) {
       console.error('Failed to delete issue:', err);
@@ -65,12 +65,12 @@ const AdminDashboard = () => {
               >
                 {issue.imageUrl && (
                   <img
-                    src={`http://localhost:5000/uploads/${issue.imageUrl}`}
+                    src={`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`}  // Updated to production backend URL
                     width="200"
                     alt="Issue"
                     style={{ cursor: 'pointer' }}
                     onClick={() =>
-                      setSelectedImage(`http://localhost:5000/uploads/${issue.imageUrl}`)
+                      setSelectedImage(`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`)  // Updated to production backend URL
                     }
                   />
                 )}
