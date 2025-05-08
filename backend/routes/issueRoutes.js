@@ -1,18 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const Issue = require('../models/Issue'); // ✅ Make sure this path is correct
+const path = require('path');
+const Issue = require('../models/Issue');
 const { createIssue, getAllIssues } = require('../controllers/issueController');
 
-const upload = multer({ dest: 'uploads/' });
+// Configure multer for image upload with unique filename
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + '-' + file.originalname;
+    cb(null, uniqueName);
+  }
+});
 
-// POST /api/issues
+const upload = multer({ storage });
+
+// POST /api/issues — handles image upload and issue creation
 router.post('/', upload.single('image'), createIssue);
 
-// GET /api/issues
+// GET /api/issues — returns all issues with full image URL
 router.get('/', getAllIssues);
 
-// DELETE /api/issues/:id ✅ THIS MUST BE INSIDE router
+// DELETE /api/issues/:id — deletes an issue by ID
 router.delete('/:id', async (req, res) => {
   try {
     const issue = await Issue.findByIdAndDelete(req.params.id);
