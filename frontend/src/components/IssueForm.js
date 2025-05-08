@@ -32,7 +32,7 @@ const IssueForm = () => {
       formData.append("timestamp", new Date().toISOString()); // Add current timestamp
 
       try {
-        await axios.post('http://localhost:5000/api/issues', formData);
+        await axios.post('https://fixit-backend-k1od.onrender.com', formData);
         alert("Issue submitted!");
         resetForm();
       } catch (err) {
