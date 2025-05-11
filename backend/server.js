@@ -22,6 +22,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // MongoDB connection
 const MONGODB_URI = 'mongodb+srv://preethamgshiva2004:ErYObiisPTujmIUV@cluster0.3aopcza.mongodb.net/fixit?retryWrites=true&w=majority&appName=Cluster0';
 
+console.log('Attempting to connect to MongoDB...');
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -29,6 +30,8 @@ mongoose.connect(MONGODB_URI, {
 })
   .then(() => {
     console.log('✅ MongoDB connected successfully');
+    console.log('Database:', mongoose.connection.db.databaseName);
+    console.log('Host:', mongoose.connection.host);
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err);
