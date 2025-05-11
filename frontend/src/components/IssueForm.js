@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import ChatBot from './ChatBot';
 import './IssueForm.css';
 
 const IssueForm = () => {
@@ -89,7 +90,7 @@ const IssueForm = () => {
             id="image-input"
             onChange={handleImageChange} // Handle file input change
           />
-          
+
           {/* Image preview */}
           {imagePreview && (
             <div className='imagePreview'>
@@ -104,6 +105,7 @@ const IssueForm = () => {
           <button className='submitButton' type="submit">Submit</button>
         </form>
       </div>
+      <ChatBot />
     </>
   );
 };

@@ -4,15 +4,22 @@ import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [issues, setIssues] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null); // For modal image
+  const [selectedImage, setSelectedImage] = useState(null);
   const [hoverText, setHoverText] = useState({ visible: false, x: 0, y: 0 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchIssues = async () => {
     try {
-      const res = await axios.get('https://fixit-backend-k1od.onrender.com/api/issues');  // Updated to production backend URL
+      setLoading(true);
+      const res = await axios.get('https://fixit-backend-k1od.onrender.com/api/issues');
       setIssues(res.data);
+      setError(null);
     } catch (err) {
       console.error('Failed to fetch issues:', err);
+      setError('Failed to load issues. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -24,135 +31,127 @@ const AdminDashboard = () => {
     if (!window.confirm('Are you sure you want to delete this issue?')) return;
 
     try {
-      await axios.delete(`https://fixit-backend-k1od.onrender.com/api/issues/${id}`); // Updated to production backend URL
+      await axios.delete(`https://fixit-backend-k1od.onrender.com/api/issues/${id}`);
       setIssues(prev => prev.filter(issue => issue._id !== id));
     } catch (err) {
       console.error('Failed to delete issue:', err);
-      alert('Error deleting issue. Check console for details.');
+      alert('Error deleting issue. Please try again.');
     }
   };
 
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading issues...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p className="error-message">{error}</p>
+        <button onClick={fetchIssues} className="retry-button">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div>
-        <h2 className='main-title'>Reported Issues</h2>
-        {issues.length === 0 ? (
+    <div className="admin-dashboard">
+      <h2 className="main-title">Reported Issues</h2>
+      {issues.length === 0 ? (
+        <div className="no-issues">
           <p>No issues reported yet.</p>
-        ) : (
-          issues.map((issue, index) => (
-            <div
-              key={issue._id}
-              style={{
-                border: '1px solid #ccc',
-                padding: '10px',
-                marginBottom: '10px',
-                marginLeft: '4vh',
-                marginRight: '4vh'
-              }}
-            >
-              {issue.createdAt && (
-                <p><strong>🕒 Submitted on:</strong> {new Date(issue.createdAt).toLocaleString()}</p>
-              )}
-              <p><strong>Report No: {index + 1}</strong></p>
-              <p><strong className='description'>Description: <br /></strong><div className='userDescription'>{issue.description}</div></p>
+        </div>
+      ) : (
+        <div className="issues-grid">
+          {issues.map((issue, index) => (
+            <div key={issue._id} className="issue-card">
+              <div className="issue-header">
+                <span className="issue-number">Report #{index + 1}</span>
+                {issue.createdAt && (
+                  <span className="issue-timestamp">
+                    🕒 {new Date(issue.createdAt).toLocaleString()}
+                  </span>
+                )}
+              </div>
 
-              <p><strong>Image: </strong></p>
-              <div
-                className='image-container'
-                onMouseEnter={() => setHoverText(prev => ({ ...prev, visible: true }))}
-                onMouseLeave={() => setHoverText({ visible: false, x: 0, y: 0 })}
-                onMouseMove={e => setHoverText({ visible: true, x: e.clientX + 15, y: e.clientY + 15 })}
-              >
-                {issue.imageUrl && (
+              <div className="description">
+                <strong>Description:</strong>
+                <div className="userDescription">{issue.description}</div>
+              </div>
+
+              {issue.imageUrl && (
+                <div
+                  className="image-container"
+                  onMouseEnter={() => setHoverText(prev => ({ ...prev, visible: true }))}
+                  onMouseLeave={() => setHoverText({ visible: false, x: 0, y: 0 })}
+                  onMouseMove={e => setHoverText({ visible: true, x: e.clientX + 15, y: e.clientY + 15 })}
+                >
                   <img
-                    src={`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`}  // Updated to production backend URL
-                    width="200"
+                    src={`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`}
                     alt="Issue"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() =>
-                      setSelectedImage(`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`)  // Updated to production backend URL
-                    }
+                    onClick={() => setSelectedImage(`https://fixit-backend-k1od.onrender.com/uploads/${issue.imageUrl}`)}
                   />
-                )}
-              </div>
+                </div>
+              )}
 
-              <p><strong>Latitude & Longitude :</strong></p>
-              <div className='location'>
-                {issue.location && issue.location.lat && issue.location.lng && (
-                  <div>
-                    <p>📍 {issue.location.lat}, {issue.location.lng}</p>
-                    <button className='map-button'
-                      onClick={() => {
-                        const mapsUrl = `https://www.google.com/maps?q=${issue.location.lat},${issue.location.lng}`;
-                        window.open(mapsUrl, '_blank');
-                      }}
-                    >
-                      View on Google Maps
-                    </button>
-                  </div>
-                )}
-              </div>
+              {issue.location && issue.location.lat && issue.location.lng && (
+                <div className="location">
+                  <strong>Location:</strong>
+                  <p>📍 {issue.location.lat}, {issue.location.lng}</p>
+                  <button
+                    className="map-button"
+                    onClick={() => {
+                      const mapsUrl = `https://www.google.com/maps?q=${issue.location.lat},${issue.location.lng}`;
+                      window.open(mapsUrl, '_blank');
+                    }}
+                  >
+                    View on Google Maps
+                  </button>
+                </div>
+              )}
 
-              <button className='delete-button' onClick={() => deleteIssue(issue._id)}>🗑 Delete</button>
+              <button
+                className="delete-button"
+                onClick={() => deleteIssue(issue._id)}
+              >
+                🗑 Delete Issue
+              </button>
             </div>
-          ))
-        )}
+          ))}
+        </div>
+      )}
 
-        {/* Tooltip */}
-        {hoverText.visible && (
-          <div style={{
-            position: 'fixed',
+      {hoverText.visible && (
+        <div
+          className="tooltip"
+          style={{
             top: hoverText.y,
             left: hoverText.x,
-            backgroundColor: 'black',
-            color: 'white',
-            padding: '5px 10px',
-            borderRadius: '5px',
-            fontSize: '12px',
-            pointerEvents: 'none',
-            zIndex: 2000
-          }}>
-            Click on the image to enlarge/open
-          </div>
-        )}
+          }}
+        >
+          Click to enlarge image
+        </div>
+      )}
 
-        {/* Image Modal */}
-        {selectedImage && (
-          <div
-            style={modalStyles.overlay}
-            onClick={() => setSelectedImage(null)}
-          >
-            <img
-              src={selectedImage}
-              alt="Enlarged"
-              style={modalStyles.image}
-            />
-          </div>
-        )}
-      </div>
-    </>
+      {selectedImage && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="Enlarged"
+            className="modal-image"
+          />
+        </div>
+      )}
+    </div>
   );
-};
-
-const modalStyles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-    cursor: 'pointer'
-  },
-  image: {
-    maxWidth: '90%',
-    maxHeight: '90%',
-    borderRadius: '8px'
-  }
 };
 
 export default AdminDashboard;

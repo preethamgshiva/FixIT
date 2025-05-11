@@ -1,68 +1,256 @@
-.main-title{
+.main-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 2rem;
     text-align: center;
-    margin: 20px;
-    font-size: 40px;
-    font-weight: bold;
 }
 
-.description{
-    font-weight: bold;
+.issues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
 }
 
-.userDescription{
-    margin-top: 10px;
-    margin-left: 2vh;
-    border: 1px dotted black;
-    border-radius: 5px;
-    padding: 5px;
+.issue-card {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
 }
 
-.image-container{
+.issue-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.issue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.issue-timestamp {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+.issue-number {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.description {
+    margin: 1rem 0;
+    color: var(--text-color);
+}
+
+.userDescription {
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    margin-top: 0.5rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.image-container {
+    margin: 1rem 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+}
+
+.image-container img {
     width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.image-container img:hover {
+    transform: scale(1.02);
+}
+
+.location {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius-sm);
+}
+
+.map-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    transition: var(--transition);
+}
+
+.map-button:hover {
+    background-color: var(--secondary-color);
+}
+
+.delete-button {
+    background-color: var(--error-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    transition: var(--transition);
+}
+
+.delete-button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px dotted black;
-    border-radius: 5px;
-    padding: 5px;
+    z-index: 1000;
+    padding: 1rem;
 }
 
-.location{
-    margin-top: 10px;
-    margin-left: 2vh;
-    border: 1px dotted black;
-    border-radius: 5px;
-    padding: 5px;
+.modal-image {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
-.map-button{
-    margin-top: 10px;
-    margin-left: 2vh;
-    border: 1px dotted black;
-    border-radius: 5px;
-    padding: 5px;
-    justify-content: center;
+.tooltip {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    pointer-events: none;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .issues-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+    }
+
+    .main-title {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .issue-card {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-title {
+        font-size: 1.5rem;
+    }
+
+    .issue-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .image-container img {
+        height: 150px;
+    }
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    gap: 1rem;
+    padding: 2rem;
     text-align: center;
 }
 
-.delete-button{
-    margin-top: 15px;
-    margin-left: 2vh;
-    border: 1px dotted black;
-    border-radius: 5px;
-    padding: 5px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 20%;
-    font-size: medium;
-    font-weight: bold;
-    background-color: red;
-    border: none;
+.error-message {
+    color: var(--error-color);
+    font-size: 1.1rem;
 }
-.delete-button:hover{
-    cursor: pointer;
-    background-color:   black;
-    color: red;   
+
+.retry-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.retry-button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.no-issues {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 1.1rem;
 }

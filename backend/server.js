@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'https://fixit-rho.vercel.app', // ✅ Replace with your actual Vercel frontend URL
+  origin: ['http://localhost:3000', 'https://fixit-rho.vercel.app'], // Allow both local and production URLs
   methods: ['GET', 'POST', 'DELETE'],
   credentials: true
 }));
@@ -20,16 +20,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/fixit', {
+const MONGODB_URI = 'mongodb+srv://preethamgshiva2004:ErYObiisPTujmIUV@cluster0.3aopcza.mongodb.net/fixit?retryWrites=true&w=majority&appName=Cluster0';
+
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
 })
-.then(() => console.log('✅ MongoDB connected'))
-.catch((err) => console.error('❌ MongoDB connection error:', err));
+  .then(() => {
+    console.log('✅ MongoDB connected successfully');
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1); // Exit if cannot connect to database
+  });
 
 // Routes
-const issueRoutes = require('./routes/issues');
+const issueRoutes = require('./routes/issueRoutes');
+const authRoutes = require('./routes/authRoutes');
 app.use('/api/issues', issueRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check route (optional)
 app.get('/', (req, res) => {
