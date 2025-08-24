@@ -132,12 +132,6 @@ Contributions are welcome! Fork the repo, create a feature branch, and open a PR
 
 ---
 
-## 📜 License
-
-This project is licensed under the **MIT License**.
-
----
-
 ## 👨‍💻 Author
 
 **Preetham G Shiva**
